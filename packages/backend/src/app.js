@@ -14,6 +14,17 @@ app.use(morgan('dev'));
 // Initialize in-memory SQLite database
 const db = new Database(':memory:');
 
+// Get all items
+app.get('/api/items', (req, res) => {
+  try {
+    const items = db.prepare('SELECT * FROM items ORDER BY created_at DESC').all();
+    res.json(items);
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ error: 'Failed to fetch items' });
+  }
+});
+
 
 // Create tables
 db.exec(`
